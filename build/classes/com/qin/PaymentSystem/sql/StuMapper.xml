@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//en"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qin.PaymentSystem.mapper.StuMapper">
+	<select id="findAll" resultType="stu">
+		select * from stu 
+	</select>
+	<select id="findById" resultType="stu">
+		select * from  stu where id=#{id}
+	</select>
+	<select id="findPassword" resultType="String">
+		select spassword from stu where sno=#{sno}
+	</select>
+	<insert id="add">
+		insert into stu (sno,sname,sgender,sclass,spassword,smajor) values (#{sno},#{sname},#{sgender},#{sclass},#{spassword},#{smajor})
+	</insert>
+</mapper>

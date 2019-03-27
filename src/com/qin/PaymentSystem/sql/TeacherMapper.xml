@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//en"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qin.PaymentSystem.mapper.TeacherMapper">
+	<select id="findAll" resultType="teacher">
+		select * from teacher 
+	</select>
+	<select id="findById" resultType="teacher">
+		select * from  teacher where id=#{id}
+	</select>
+	<select id="findPassword" resultType="String">
+		select tpassword from teacher where tno=#{tno}
+	</select>
+	<insert id="add">
+		insert into teacher (tno,tname,tgender,tpassword) values (#{tno},#{tname},#{tgender},#{tpassword})
+	</insert>
+</mapper>

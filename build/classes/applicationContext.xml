@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	 xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		      http://www.springframework.org/schema/beans
+		      http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		      http://www.springframework.org/schema/context
+		      http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		      http://www.springframework.org/schema/mvc
+		      http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		      http://www.springframework.org/schema/tx
+		      http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	<!-- 配置组件扫描  就是包名 -->
+	<context:component-scan base-package="com.qin.PaymentSystem"/>
+	<!-- mvc注解驱动 @Service @Controller @Resource -->
+	<mvc:annotation-driven/>
+	<!-- 配置视图解析器 -->
+	<bean id="view" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/page/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 配置数据库连接池 -->
+	<bean id="dbcp" class="org.apache.commons.dbcp2.BasicDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/pays?/characterEncoding=UTF-8"/>
+		<property name="username" value="root"/>
+		<property name="password" value="123456"/>
+	</bean>
+	<!-- 配置MyBatis的SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dbcp"/>
+		<property name="mapperLocations" value="classpath:com/qin/PaymentSystem/sql/*.xml"/>
+		<property name="typeAliasesPackage" value="com.qin.PaymentSystem.entity"/>
+	</bean>
+	<!-- 配置MyBatis Mapper映射扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.qin.PaymentSystem.mapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	<!-- 配置spirng的事务管理 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dbcp"/>
+	</bean>
+	<!-- 开启事务注解驱动 -->
+	<tx:annotation-driven transaction-manager="txManager"/>
+	<!-- 配置拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+		<mvc:exclude-mapping path="/login/*"/>
+		<bean class="com.qin.PaymentSystem.interceptor.AccessInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+</beans>
